@@ -27,4 +27,19 @@ class Golfer extends Model
         'latitude' => 'float',
         'longitude' => 'float',
     ];
+
+    public function scopeClosest($query, $lat, $long)
+    {
+        $distanceQuery = "(
+            6371 * acos(
+                cos(radians(?)) * cos(radians(golfers.latitude)) *
+                cos(radians(golfers.longitude) - radians(?)) +
+                sin(radians(?)) * sin(radians(golfers.latitude))
+            )
+        ) AS distance";
+
+        return $query->select('golfers.*')
+            ->selectRaw($distanceQuery, [$lat, $long, $lat])
+            ->orderBy('distance', 'asc');
+    }
 }
