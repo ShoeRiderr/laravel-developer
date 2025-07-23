@@ -10,3 +10,6 @@ Route::get('/', function () {
 Route::apiResource('golfers', GolferController::class, [
     'only' => ['index'],
 ]);
+
+
+Route::get('/golfers/download', [GolferController::class, 'downloadCsv']);
